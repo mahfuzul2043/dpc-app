@@ -60,6 +60,18 @@ if(typeof(loginDiv) != 'undefined'){
 
       // The user has successfully completed the authentication flow
       if (res.status === 'SUCCESS') {
+        // Legacy response
+        res.session.setCookieAndRedirect(
+          '/internal/auth/oktaoauth'
+          // '{{Okta URL}}/oauth2/{authz server ID}/v1/authorize?client_id={{clientId}}&response_type=id_token token&response_mode=fragment&scope={{oidcScopes}}&redirect_uri={{redirectUri}}&state={{state}}&nonce={{$guid}}'
+        );
+
+        // Okta URL = your Okta org domain, e.g. https://mycompany.okta.com
+        // authz server ID = the GUID of the Authorization Server processing your request (and minting tokens)
+        // clientId = the Client ID of your OIDC app in Okta
+        // oidcScopes = the desired scopes you wish to request
+        // redirectUri = the location to which the token(s) will be returned upon successful authorization
+
         // OIDC response
         // Response includes a user object:
         //   user: {
@@ -79,16 +91,16 @@ if(typeof(loginDiv) != 'undefined'){
         // If the widget is configured for OIDC with a single responseType, the
         // response will be the token.
         // i.e. authParams.responseType = 'id_token':
-        console.log(res.claims);
-        signIn.tokenManager.add('my_id_token', res);
+        // console.log(res.claims);
+        // signIn.tokenManager.add('my_id_token', res);
 
-        // If the widget is configured for OIDC with multiple responseTypes, the
-        // response will be an array of tokens:
-        // i.e. authParams.responseType = ['id_token', 'token']
-        signIn.tokenManager.add('my_id_token', res[0]);
-        signIn.tokenManager.add('my_access_token', res[1]);
+        // // If the widget is configured for OIDC with multiple responseTypes, the
+        // // response will be an array of tokens:
+        // // i.e. authParams.responseType = ['id_token', 'token']
+        // signIn.tokenManager.add('my_id_token', res[0]);
+        // signIn.tokenManager.add('my_access_token', res[1]);
 
-        return;
+        // return;
       }
 
     },
